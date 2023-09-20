@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/mudandstars/notifier/database"
 	"github.com/mudandstars/notifier/models"
-	"github.com/mudandstars/notifier/server"
 	"github.com/mudandstars/notifier/utils"
 
 	"context"
@@ -19,7 +18,7 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	if err := server.RunLocalServer(context.Background()); err != nil {
+	if err := RunLocalServer(context.Background()); err != nil {
 		log.Fatal(err)
 	}
 }
