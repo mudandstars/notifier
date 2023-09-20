@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/Components/webhooks_list.dart';
+import 'package:namer_app/Components/create_webhook_form.dart';
 import 'package:provider/provider.dart';
 import '../State/global_state.dart';
 
@@ -10,7 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<GlobalState>();
 
-    if (appState.webhooks == null) {
+    if (!appState.queriedWebhooks) {
       appState.initState();
     }
 
@@ -18,23 +19,8 @@ class HomePage extends StatelessWidget {
       key: Key(appState.webhooks?.length.toString() ?? "0"),
       body: Column(
         children: [
-          TextField(
-            controller: textEditingController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(),
-              hintText: "Enter the project's name",
-            ),
-          ),
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Access the current value of the text field
-                  String currentValue = textEditingController.text;
-                  print("Current Value: $currentValue");
-                },
-                child: Text('Get Value'),
-              ),
               ElevatedButton(
                 onPressed: () {
                   appState.initState();
@@ -43,7 +29,8 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          WebhooksList(webhooks: appState.webhooks)
+          CreateWebhookForm(),
+          WebhooksList(webhooks: appState.webhooks),
         ],
       ),
     );
