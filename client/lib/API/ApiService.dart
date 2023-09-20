@@ -8,8 +8,9 @@ class ApiService {
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(response.body)['webhooks'];
-      List<String> webhooks = jsonList.map((item) => item.toString()).toList();
+      List<dynamic>? jsonList = jsonDecode(response.body)['webhooks'];
+      List<String>? webhooks =
+          jsonList?.map((item) => item.toString()).toList();
       return webhooks;
     }
 

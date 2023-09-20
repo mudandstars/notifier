@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class WebhooksList extends StatelessWidget {
-  final List<String> webhooks;
+  final List<String>? webhooks;
 
   WebhooksList({required this.webhooks});
 
   @override
   Widget build(BuildContext context) {
-    return webhooks.isEmpty
+    return webhooks?.isEmpty ?? true
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -15,10 +15,10 @@ class WebhooksList extends StatelessWidget {
             child: SizedBox(
                 height: 200.0,
                 child: ListView.builder(
-                  itemCount: webhooks.length,
+                  itemCount: webhooks!.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(webhooks[index]),
+                      title: Text(webhooks![index]),
                     );
                   },
                 )),

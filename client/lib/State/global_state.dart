@@ -2,7 +2,7 @@ import '../API/ApiService.dart';
 import 'package:flutter/material.dart';
 
 class GlobalState extends ChangeNotifier {
-  List<String> webhooks = [];
+  List<String>? webhooks;
 
   void initState() async {
     webhooks = await getData();

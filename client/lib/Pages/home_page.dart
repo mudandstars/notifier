@@ -10,12 +10,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<GlobalState>();
 
-    if (appState.webhooks.isEmpty) {
+    if (appState.webhooks == null) {
       appState.initState();
     }
 
     return Scaffold(
-      key: Key(appState.webhooks.length.toString()),
+      key: Key(appState.webhooks?.length.toString() ?? "0"),
       body: Column(
         children: [
           TextField(

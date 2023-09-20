@@ -31,6 +31,7 @@ func projectsRouter(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		webhookHandler.Index(w, r)
+		return
 	}
 
 	if r.Method != http.MethodGet && r.Method != http.MethodPost {
