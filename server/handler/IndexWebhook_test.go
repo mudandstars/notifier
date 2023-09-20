@@ -11,10 +11,6 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-type indexResponse struct {
-	Webhooks []string `json:"webhooks"`
-}
-
 func TestIndexWebhookHandler(t *testing.T) {
 	webhookRepo := repository.NewWebhookRepository(database.MemoryConnection())
 	webhookRepo.DB.AutoMigrate(&models.Webhook{})

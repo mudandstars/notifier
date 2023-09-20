@@ -1,16 +1,19 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'package:namer_app/type/webhook.dart';
 
 class ApiService {
-  Future<List<String>?> getWebhooks() async {
+  Future<List<Webhook>?> getWebhooks() async {
     var url = Uri.parse("http://127.0.0.1:6000/webhooks");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       List<dynamic>? jsonList = jsonDecode(response.body)['webhooks'];
-      List<String>? webhooks =
-          jsonList?.map((item) => item.toString()).toList();
+      print(jsonList);
+
+      List<Webhook>? webhooks = jsonList
+          ?.map((item) => Webhook(name: item["name"], url: item["url"]))
+          .toList();
       return webhooks;
     }
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:namer_app/type/webhook.dart';
 
 class WebhooksList extends StatelessWidget {
-  final List<String>? webhooks;
+  final List<Webhook>? webhooks;
 
   WebhooksList({required this.webhooks});
 
@@ -20,7 +21,8 @@ class WebhooksList extends StatelessWidget {
                       itemCount: webhooks!.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(webhooks![index]),
+                          title: Text(webhooks![index].name),
+                          subtitle: Text(webhooks![index].url),
                         );
                       },
                     )),

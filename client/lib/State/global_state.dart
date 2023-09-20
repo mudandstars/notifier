@@ -1,8 +1,10 @@
-import '../API/ApiService.dart';
+import 'package:namer_app/type/webhook.dart';
+
+import '../API/api_service.dart';
 import 'package:flutter/material.dart';
 
 class GlobalState extends ChangeNotifier {
-  List<String>? webhooks;
+  List<Webhook>? webhooks;
   bool queriedWebhooks = false;
 
   void initState() async {
@@ -13,7 +15,7 @@ class GlobalState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<String>?> getData() async {
+  Future<List<Webhook>?> getData() async {
     return await ApiService().getWebhooks();
   }
 }

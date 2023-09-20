@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/API/ApiService.dart';
+import 'package:namer_app/API/api_service.dart';
 import 'package:namer_app/State/global_state.dart';
 import 'package:provider/provider.dart';
 

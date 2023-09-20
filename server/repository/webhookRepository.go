@@ -23,7 +23,6 @@ type CreateWebhookBody struct {
 func (controller *WebhookRepository) Store(body CreateWebhookBody) error {
 	if err := controller.DB.Create(&models.Webhook{
 		Name: body.Name,
-		Url:  "some url",
 	}).Error; err != nil {
 		return err
 	}
