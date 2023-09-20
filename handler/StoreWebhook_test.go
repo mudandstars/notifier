@@ -18,7 +18,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 
 	t.Run("correctly stores the record", func(t *testing.T) {
 		name := "new webhook name"
-		storeWebhookHandler := &StoreWebhookHandler{
+		storeWebhookHandler := &WebhookHandler{
 			Repo: *webhookRepo,
 		}
 
@@ -36,7 +36,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 
 		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(storeWebhookHandler.ServeHTTP)
+		handler := http.HandlerFunc(storeWebhookHandler.Store)
 
 		handler.ServeHTTP(rr, req)
 

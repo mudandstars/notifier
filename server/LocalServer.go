@@ -21,17 +21,16 @@ func RunLocalServer(ctx context.Context) error {
 
 func projectsRouter(w http.ResponseWriter, r *http.Request) {
 	webhookRepository := repository.NewWebhookRepository(database.FileConnection())
+	webhookHandler := (&handler.WebhookHandler{
+		Repo: *webhookRepository,
+	})
 
 	if r.Method == http.MethodPost {
-		(&handler.StoreWebhookHandler{
-			Repo: *webhookRepository,
-		}).ServeHTTP(w, r)
+		webhookHandler.Store(w, r)
 	}
 
 	if r.Method == http.MethodGet {
-		(&handler.IndexWebhookHandler{
-			Repo: *webhookRepository,
-		}).ServeHTTP(w, r)
+		webhookHandler.Index(w, r)
 	}
 
 	if r.Method != http.MethodGet && r.Method != http.MethodPost {

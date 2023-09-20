@@ -20,7 +20,7 @@ func TestIndexWebhookHandler(t *testing.T) {
 	webhookRepo.DB.AutoMigrate(&models.Webhook{})
 
 	t.Run("correctly retrieves all records as json", func(t *testing.T) {
-		indexWebhookHandler := &IndexWebhookHandler{
+		indexWebhookHandler := &WebhookHandler{
 			Repo: *webhookRepo,
 		}
 
@@ -35,7 +35,7 @@ func TestIndexWebhookHandler(t *testing.T) {
 		}
 
 		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(indexWebhookHandler.ServeHTTP)
+		handler := http.HandlerFunc(indexWebhookHandler.Index)
 
 		handler.ServeHTTP(rr, req)
 
