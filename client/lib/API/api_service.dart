@@ -12,7 +12,8 @@ class ApiService {
       print(jsonList);
 
       List<Webhook>? webhooks = jsonList
-          ?.map((item) => Webhook(name: item["name"], url: item["url"]))
+          ?.map((item) =>
+              Webhook(name: item["name"], url: item["url"], id: item["id"]))
           .toList();
       return webhooks;
     }
@@ -33,7 +34,17 @@ class ApiService {
         await http.post(url, headers: headers, body: jsonEncode(requestBody));
 
     if (response.statusCode == 200) {
-      print("succes");
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> deleteWebhook(int id) async {
+    var url = Uri.parse("http://127.0.0.1:6000/webhooks/$id");
+    var response = await http.delete(url);
+
+    if (response.statusCode == 200) {
       return true;
     }
 

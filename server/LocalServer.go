@@ -13,6 +13,7 @@ import (
 
 func RunLocalServer(ctx context.Context) error {
 	http.HandleFunc("/webhooks", projectsRouter)
+	http.HandleFunc("/webhooks/", projectsRouter)
 
 	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
@@ -30,6 +31,11 @@ func projectsRouter(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		webhookHandler.Index(w, r)
+		return
+	}
+
+	if r.Method == http.MethodDelete {
+		webhookHandler.Delete(w, r)
 		return
 	}
 

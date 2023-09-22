@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -28,6 +29,7 @@ type indexResponse struct {
 type indexWebhook struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+	Id uint `json:"id"`
 }
 
 func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +45,7 @@ func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 		webhooksBody = append(webhooksBody, indexWebhook{
 			Name: webhook.Name,
 			Url:  os.Getenv("NGROK_PUBLIC_URL") + "?name=" + webhook.Name,
+			Id: webhook.ID,
 		})
 	}
 
@@ -51,8 +54,6 @@ func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJson(w, responseObject)
-
-	log.Println("something came to get data")
 }
 
 func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +74,8 @@ func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
 
 func (handler *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, error := utils.Path(r.URL.Path, "webhooks")
+
+	fmt.Print(id, error)
 
 	if error != nil {
 		http.Error(w, "Invalid id", http.StatusBadRequest)
