@@ -7,21 +7,17 @@ import (
 )
 
 type WebhookRepository struct {
-	DB *gorm.DB
+	db *gorm.DB
 }
 
 func NewWebhookRepository(db *gorm.DB) *WebhookRepository {
 	return &WebhookRepository{
-		DB: db,
+		db: db,
 	}
 }
 
-type CreateWebhookBody struct {
-	Name string
-}
-
-func (controller *WebhookRepository) Store(body CreateWebhookBody) error {
-	if err := controller.DB.Create(&models.Webhook{
+func (controller *WebhookRepository) Store(body *models.Webhook) error {
+	if err := controller.db.Create(&models.Webhook{
 		Name: body.Name,
 	}).Error; err != nil {
 		return err
@@ -33,11 +29,19 @@ func (controller *WebhookRepository) Store(body CreateWebhookBody) error {
 func (controller *WebhookRepository) All() ([]models.Webhook, error) {
 	var users []models.Webhook
 
-	result := controller.DB.Find(&users)
+	result := controller.db.Find(&users)
 
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
 	return users, nil
+}
+
+func (controller *WebhookRepository) Delete(id uint) error {
+	if err := controller.db.Delete(&models.Webhook{}, id).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

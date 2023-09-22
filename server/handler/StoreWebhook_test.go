@@ -13,16 +13,16 @@ import (
 )
 
 func TestStoreWebhookHandler(t *testing.T) {
-	webhookRepo := repository.NewWebhookRepository(database.MemoryConnection())
-	webhookRepo.DB.AutoMigrate(&models.Webhook{})
+	db := database.MemoryConnection()
+	db.AutoMigrate(&models.Webhook{})
+
+	webhookRepo := repository.NewWebhookRepository(db)
+	webhookHandler := NewWebhookHandler(*webhookRepo)
 
 	t.Run("correctly stores the record", func(t *testing.T) {
 		name := "new webhook name"
-		storeWebhookHandler := &WebhookHandler{
-			Repo: *webhookRepo,
-		}
 
-		requestBody := repository.CreateWebhookBody{
+		requestBody := models.Webhook{
 			Name: name,
 		}
 
@@ -36,7 +36,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 
 		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(storeWebhookHandler.Store)
+		handler := http.HandlerFunc(webhookHandler.Store)
 
 		handler.ServeHTTP(rr, req)
 
@@ -45,7 +45,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 		}
 
 		var webhook models.Webhook
-		webhookRepo.DB.Where("name = ?", name).First(&webhook)
+		db.Where("name = ?", name).First(&webhook)
 
 		if webhook.Name != name {
 			t.Fatal("Webhook was not created successfully")

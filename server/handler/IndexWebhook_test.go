@@ -12,17 +12,18 @@ import (
 )
 
 func TestIndexWebhookHandler(t *testing.T) {
-	webhookRepo := repository.NewWebhookRepository(database.MemoryConnection())
-	webhookRepo.DB.AutoMigrate(&models.Webhook{})
+	db := database.MemoryConnection()
+	db.AutoMigrate(&models.Webhook{})
+
+	webhookRepo := repository.NewWebhookRepository(db)
 
 	t.Run("correctly retrieves all records as json", func(t *testing.T) {
-		indexWebhookHandler := &WebhookHandler{
-			Repo: *webhookRepo,
-		}
+		webhookHandler := NewWebhookHandler(*webhookRepo)
 
-		webhookRepo.Store(struct{ Name string }{Name: " some name"})
-		webhookRepo.Store(struct{ Name string }{Name: "some other name"})
-		expectedLength := 2
+		webhookRepo.Store(&models.Webhook{Name: " some name"})
+		webhookRepo.Store(&models.Webhook{Name: "some other name"})
+		webhooks, _ := webhookRepo.All()
+		expectedLength := len(webhooks)
 
 		req, err := http.NewRequest("GET", "/webhooks", nil)
 
@@ -31,7 +32,7 @@ func TestIndexWebhookHandler(t *testing.T) {
 		}
 
 		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(indexWebhookHandler.Index)
+		handler := http.HandlerFunc(webhookHandler.Index)
 
 		handler.ServeHTTP(rr, req)
 

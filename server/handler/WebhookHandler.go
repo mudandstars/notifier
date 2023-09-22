@@ -6,12 +6,19 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/mudandstars/notifier/models"
 	"github.com/mudandstars/notifier/repository"
 	"github.com/mudandstars/notifier/utils"
 )
 
 type WebhookHandler struct {
-	Repo repository.WebhookRepository
+	repo repository.WebhookRepository
+}
+
+func NewWebhookHandler (repo repository.WebhookRepository) WebhookHandler {
+	return WebhookHandler{
+		repo: repo,
+	}
 }
 
 type indexResponse struct {
@@ -24,7 +31,7 @@ type indexWebhook struct {
 }
 
 func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
-	allWebhooks, error := handler.Repo.All()
+	allWebhooks, error := handler.repo.All()
 
 	if error != nil {
 		log.Fatal(error)
@@ -59,7 +66,18 @@ func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handler.Repo.Store(repository.CreateWebhookBody{
+	handler.repo.Store(&models.Webhook{
 		Name: requestBody.Name,
 	})
+}
+
+func (handler *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	id, error := utils.Path(r.URL.Path, "webhooks")
+
+	if error != nil {
+		http.Error(w, "Invalid id", http.StatusBadRequest)
+		return
+	}
+
+	handler.repo.Delete(id)
 }

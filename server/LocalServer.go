@@ -20,10 +20,9 @@ func RunLocalServer(ctx context.Context) error {
 }
 
 func projectsRouter(w http.ResponseWriter, r *http.Request) {
-	webhookRepository := repository.NewWebhookRepository(database.FileConnection())
-	webhookHandler := (&handler.WebhookHandler{
-		Repo: *webhookRepository,
-	})
+	webhookHandler := handler.NewWebhookHandler(
+		*repository.NewWebhookRepository(database.FileConnection()),
+	)
 
 	if r.Method == http.MethodPost {
 		webhookHandler.Store(w, r)
