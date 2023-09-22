@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -17,6 +18,7 @@ func RunLocalServer(ctx context.Context) error {
 
 	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
+	log.Print("Running local server..")
 	return http.ListenAndServe(address, nil)
 }
 

@@ -75,8 +75,6 @@ func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
 func (handler *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, error := utils.Path(r.URL.Path, "webhooks")
 
-	fmt.Print(id, error)
-
 	if error != nil {
 		http.Error(w, "Invalid id", http.StatusBadRequest)
 		return

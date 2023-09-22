@@ -26,7 +26,6 @@ func RunNgrokServer(ctx context.Context) error {
 	router := http.NewServeMux()
 
 	router.HandleFunc("/notifier", baseHandler)
-	// router.HandleFunc("/anotherendpoint", anotherEndpointHandler)
 
 	log.Println("tunnel created:", tunnel.URL())
 
