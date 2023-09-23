@@ -19,7 +19,10 @@ class HomePage extends StatelessWidget {
       key: Key(appState.webhooks?.length.toString() ?? "0"),
       body: Column(
         children: [
-          CreateWebhookForm(),
+          Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: CreateWebhookForm()
+              ),
           WebhooksList(webhooks: appState.webhooks),
         ],
       ),

@@ -24,49 +24,70 @@ class WebhooksList extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: webhooks!.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(webhooks![index].name),
-                        subtitle: Row(
-                          children: [
-                            Expanded(
-                              child: Text(webhooks![index].url),
+                    return Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Card(
+                          child: ListTile(
+                            title: Text(webhooks![index].name),
+                            subtitle: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 350,
+                                  child: Text(
+                                    webhooks![index].url,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: IconButton(
+                                      iconSize: 15,
+                                      icon: Icon(Icons.content_copy),
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(
+                                                text: webhooks![index].url))
+                                            .then((result) {
+                                          String webhookName =
+                                              webhooks![index].name;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "Copied $webhookName's url to your clipboard.")),
+                                          );
+                                        }).catchError((error) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text('Copy failed')),
+                                          );
+                                        });
+                                      },
+                                    )),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(Icons.content_copy),
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(
-                                        text: webhooks![index].url))
-                                    .then((result) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Copied to clipboard')),
-                                  );
-                                }).catchError((error) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Copy failed')),
-                                  );
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        trailing: ElevatedButton(
-                          onPressed: () async {
-                            int id = webhooks![index].id;
-                            bool isDeleted =
-                                await ApiService().deleteWebhook(id);
-                            print(
-                                'Delete button pressed with $id, it was $isDeleted');
+                            trailing: ElevatedButton(
+                              onPressed: () async {
+                                int id = webhooks![index].id;
+                                bool isDeleted =
+                                    await ApiService().deleteWebhook(id);
+                                print(
+                                    'Delete button pressed with $id, it was $isDeleted');
 
-                            if (isDeleted) {
-                              appState.initState();
-                            }
-                          },
-                          child: Text('Delete'),
-                        ),
-                      ),
-                    );
+                                if (isDeleted) {
+                                  appState.initState();
+                                }
+                              },
+                              child: Text('Delete'),
+                            ),
+                          ),
+                        ));
                   },
                 ),
               );

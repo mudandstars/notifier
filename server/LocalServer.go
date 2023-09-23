@@ -34,10 +34,10 @@ func projectsRouter(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		webhookHandler.Store(w, r)
+		return
 	}
 
 	if r.Method == http.MethodGet {
-		log.Print("Received GET..")
 		webhookHandler.Index(w, r)
 		return
 	}
