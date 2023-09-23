@@ -43,7 +43,7 @@ func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 	for _, webhook := range allWebhooks {
 		webhooksBody = append(webhooksBody, indexWebhook{
 			Name: webhook.Name,
-			Url:  os.Getenv("NGROK_PUBLIC_URL") + "?name=" + webhook.Name,
+			Url:  os.Getenv("NGROK_PUBLIC_URL") + "/notifier?name=" + webhook.Name,
 			Id:   webhook.ID,
 		})
 	}

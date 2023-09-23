@@ -14,9 +14,9 @@ func main() {
 
 	database.FileConnection().AutoMigrate(&models.Webhook{})
 
-	go func() {
-		log.Fatal(RunLocalServer(context.Background()))
-	}()
+	// go func() {
+	// 	log.Fatal(RunLocalServer(context.Background()))
+	// }()
 
 	log.Fatal(RunNgrokServer(context.Background()))
 }

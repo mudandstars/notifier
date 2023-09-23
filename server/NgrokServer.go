@@ -25,18 +25,19 @@ func RunNgrokServer(ctx context.Context) error {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/notifier", baseHandler)
+	router.HandleFunc("/notifier", notificationHandler)
 
 	log.Println("tunnel created:", tunnel.URL())
 
 	return http.Serve(tunnel, router)
 }
 
-func baseHandler(w http.ResponseWriter, r *http.Request) {
+func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	utils.Notify("Hallo Felix", "Get rekt");
+	projectName := r.URL.Query()["name"][0]
+	utils.Notify("Project "+projectName, "Triggered URL")
 }
