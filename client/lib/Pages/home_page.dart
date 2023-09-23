@@ -19,16 +19,6 @@ class HomePage extends StatelessWidget {
       key: Key(appState.webhooks?.length.toString() ?? "0"),
       body: Column(
         children: [
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  appState.initState();
-                },
-                child: Text('Refresh GET'),
-              ),
-            ],
-          ),
           CreateWebhookForm(),
           WebhooksList(webhooks: appState.webhooks),
         ],

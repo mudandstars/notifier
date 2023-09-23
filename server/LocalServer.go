@@ -10,6 +10,7 @@ import (
 	"github.com/mudandstars/notifier/database"
 	"github.com/mudandstars/notifier/handler"
 	"github.com/mudandstars/notifier/repository"
+	"github.com/rs/cors"
 )
 
 func RunLocalServer(ctx context.Context) error {
@@ -18,8 +19,12 @@ func RunLocalServer(ctx context.Context) error {
 
 	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
-	log.Print("Running local server..")
-	return http.ListenAndServe(address, nil)
+	c := cors.AllowAll()
+
+    handler := c.Handler(http.DefaultServeMux)
+
+	log.Printf("Running local server on port %s", os.Getenv("PORT"))
+	return http.ListenAndServe(address, handler)
 }
 
 func projectsRouter(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +37,7 @@ func projectsRouter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
+		log.Print("Received GET..")
 		webhookHandler.Index(w, r)
 		return
 	}

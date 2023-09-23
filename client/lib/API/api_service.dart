@@ -9,7 +9,6 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<dynamic>? jsonList = jsonDecode(response.body)['webhooks'];
-      print(jsonList);
 
       List<Webhook>? webhooks = jsonList
           ?.map((item) =>

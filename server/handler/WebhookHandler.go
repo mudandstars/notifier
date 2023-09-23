@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,7 +15,7 @@ type WebhookHandler struct {
 	repo repository.WebhookRepository
 }
 
-func NewWebhookHandler (repo repository.WebhookRepository) WebhookHandler {
+func NewWebhookHandler(repo repository.WebhookRepository) WebhookHandler {
 	return WebhookHandler{
 		repo: repo,
 	}
@@ -29,7 +28,7 @@ type indexResponse struct {
 type indexWebhook struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
-	Id uint `json:"id"`
+	Id   uint   `json:"id"`
 }
 
 func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +44,7 @@ func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 		webhooksBody = append(webhooksBody, indexWebhook{
 			Name: webhook.Name,
 			Url:  os.Getenv("NGROK_PUBLIC_URL") + "?name=" + webhook.Name,
-			Id: webhook.ID,
+			Id:   webhook.ID,
 		})
 	}
 
