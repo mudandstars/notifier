@@ -5,7 +5,8 @@ import (
 )
 
 func Notify (title string, description string) {
-	err := beeep.Alert(title, description, "assets/warning.png")
+	err := beeep.Alert(title, description, "../assets/notify.png")
+
 	if err != nil {
 		panic(err)
 	}
