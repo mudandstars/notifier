@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notifier/utils/store_to_clipboard.dart';
 import 'package:provider/provider.dart';
 import 'package:notifier/API/api_service.dart';
 import 'package:notifier/State/global_state.dart';
-import 'package:flutter/services.dart';
 import 'package:notifier/type/webhook.dart';
 
 class WebhooksList extends StatelessWidget {
@@ -50,42 +50,28 @@ class WebhooksList extends StatelessWidget {
                                       iconSize: 15,
                                       icon: Icon(Icons.content_copy),
                                       onPressed: () {
-                                        Clipboard.setData(ClipboardData(
-                                                text: webhooks![index].url))
-                                            .then((result) {
-                                          String webhookName =
-                                              webhooks![index].name;
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    "Copied $webhookName's url to your clipboard.")),
-                                          );
-                                        }).catchError((error) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text('Copy failed')),
-                                          );
-                                        });
+                                        storeToClipboard(
+                                            context, webhooks![index]);
                                       },
                                     )),
                               ],
                             ),
-                            trailing: ElevatedButton(
-                              onPressed: () async {
-                                int id = webhooks![index].id;
-                                bool isDeleted =
-                                    await ApiService().deleteWebhook(id);
-                                print(
-                                    'Delete button pressed with $id, it was $isDeleted');
+                            trailing: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: IconButton(
+                                  iconSize: 20,
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () async {
+                                    int id = webhooks![index].id;
+                                    bool isDeleted =
+                                        await ApiService().deleteWebhook(id);
 
-                                if (isDeleted) {
-                                  appState.initState();
-                                }
-                              },
-                              child: Text('Delete'),
-                            ),
+                                    if (isDeleted) {
+                                      appState.initState();
+                                    }
+                                  },
+                                )),
                           ),
                         ));
                   },

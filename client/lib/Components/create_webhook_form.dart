@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notifier/API/api_service.dart';
+import 'package:notifier/Components/standard_button.dart';
 import 'package:notifier/State/global_state.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,17 @@ class CreateWebhookForm extends StatelessWidget {
     var appState = context.watch<GlobalState>();
 
     return SizedBox(
-        height: 200.0,
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Create Webhook",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Expanded(
               child: TextField(
             controller: textEditingController,
@@ -21,7 +31,7 @@ class CreateWebhookForm extends StatelessWidget {
               hintText: "Enter the project's name",
             ),
           )),
-          ElevatedButton(
+          StandardButton(
             onPressed: () async {
               String name = textEditingController.text;
               bool isStored = await ApiService().storeWebhook(name);
@@ -30,8 +40,10 @@ class CreateWebhookForm extends StatelessWidget {
                 appState.initState();
               }
             },
-            child: Text('Create Webhook'),
+            text: 'Create',
           ),
-        ]));
+        ])
+      ],
+    ));
   }
 }

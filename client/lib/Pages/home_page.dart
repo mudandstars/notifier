@@ -21,8 +21,10 @@ class HomePage extends StatelessWidget {
         children: [
           Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
-              child: CreateWebhookForm()
-              ),
+              child: CreateWebhookForm()),
+          SizedBox(
+            height: 50,
+          ),
           WebhooksList(webhooks: appState.webhooks),
         ],
       ),

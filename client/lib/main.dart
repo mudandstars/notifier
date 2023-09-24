@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         title: 'Notifier',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         ),
         home: HomePage(),
       ),
