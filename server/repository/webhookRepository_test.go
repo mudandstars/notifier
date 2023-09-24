@@ -7,7 +7,7 @@ import (
 	"github.com/mudandstars/notifier/models"
 )
 
-func TestRepository(t *testing.T) {
+func TestWebhookRepository(t *testing.T) {
 	db := database.MemoryConnection()
 	db.AutoMigrate(&models.Webhook{})
 
