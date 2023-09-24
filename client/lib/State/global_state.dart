@@ -1,9 +1,6 @@
-import 'package:logging/logging.dart';
-import 'package:namer_app/type/webhook.dart';
+import 'package:notifier/type/webhook.dart';
 import '../API/api_service.dart';
 import 'package:flutter/material.dart';
-
-final logger = Logger('MyApp');
 
 class GlobalState extends ChangeNotifier {
   List<Webhook>? webhooks;

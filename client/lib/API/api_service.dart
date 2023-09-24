@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:namer_app/type/webhook.dart';
+import 'package:notifier/type/webhook.dart';
 
 class ApiService {
   Future<List<Webhook>?> getWebhooks() async {

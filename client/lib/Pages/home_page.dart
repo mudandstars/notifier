@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/Components/webhooks_list.dart';
-import 'package:namer_app/Components/create_webhook_form.dart';
+import 'package:notifier/Components/webhooks_list.dart';
+import 'package:notifier/Components/create_webhook_form.dart';
 import 'package:provider/provider.dart';
 import '../State/global_state.dart';
 

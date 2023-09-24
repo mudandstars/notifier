@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/API/api_service.dart';
-import 'package:namer_app/State/global_state.dart';
+import 'package:notifier/API/api_service.dart';
+import 'package:notifier/State/global_state.dart';
 import 'package:provider/provider.dart';
 
 class CreateWebhookForm extends StatelessWidget {
