@@ -21,24 +21,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 
 	t.Run("correctly stores the record", func(t *testing.T) {
 		name := "new webhook name"
-
-		requestBody := models.Webhook{
-			Name: name,
-		}
-
-		body, _ := json.Marshal(requestBody)
-
-		req, err := http.NewRequest("POST", "/webhooks", bytes.NewBuffer(body))
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		req.Header.Set("Content-Type", "application/json")
-
-		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(webhookHandler.Store)
-
-		handler.ServeHTTP(rr, req)
+		rr := makeStoreRequest(t, webhookHandler, name)
 
 		if status := rr.Code; status != http.StatusOK {
 			t.Errorf("Expected status %v, but got %v", http.StatusOK, status)
@@ -51,4 +34,54 @@ func TestStoreWebhookHandler(t *testing.T) {
 			t.Fatal("Webhook was not created successfully")
 		}
 	})
+
+	t.Run("name cannot be empty string", func(t *testing.T) {
+		rr := makeStoreRequest(t, webhookHandler, " ")
+
+		if status := rr.Code; status != http.StatusUnprocessableEntity {
+			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
+		}
+	})
+
+	t.Run("name gets trimmed", func(t *testing.T) {
+		name := "  test "
+		makeStoreRequest(t, webhookHandler, name)
+
+		var webhook models.Webhook
+		db.Where("name = ?", name).First(&webhook)
+
+		if webhook.Name != name {
+			t.Fatal("Webhook was not created successfully")
+		}
+	})
+
+	t.Run("cannot store duplicate names", func(t *testing.T) {
+		name := "test name"
+		makeStoreRequest(t, webhookHandler, name)
+		rr := makeStoreRequest(t, webhookHandler, name)
+
+		if status := rr.Code; status != http.StatusNotAcceptable {
+			t.Errorf("Expected status %v, but got %v", http.StatusNotAcceptable, status)
+		}
+	})
+}
+
+func makeStoreRequest(t *testing.T, webhookHandler WebhookHandler, name string) *httptest.ResponseRecorder {
+		requestBody := models.Webhook{
+			Name: name,
+		}
+
+		body, _ := json.Marshal(requestBody)
+
+		req, err := http.NewRequest("POST", "/webhooks", bytes.NewBuffer(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		rr := httptest.NewRecorder()
+		handler := http.HandlerFunc(webhookHandler.Store)
+
+		handler.ServeHTTP(rr, req)
+
+		return rr
 }

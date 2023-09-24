@@ -17,9 +17,7 @@ func NewWebhookRepository(db *gorm.DB) *WebhookRepository {
 }
 
 func (controller *WebhookRepository) Store(body *models.Webhook) error {
-	if err := controller.db.Create(&models.Webhook{
-		Name: body.Name,
-	}).Error; err != nil {
+	if err := controller.db.Create(&body).Error; err != nil {
 		return err
 	}
 
@@ -44,4 +42,14 @@ func (controller *WebhookRepository) Delete(id uint) error {
 	}
 
 	return nil
+}
+
+func (controller *WebhookRepository) Exists(name string) bool {
+	count := int64(0)
+
+	controller.db.Model(&models.Webhook{}).
+		Where("name = ?", name).
+		Count(&count)
+
+	return count > 0
 }

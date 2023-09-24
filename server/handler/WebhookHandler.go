@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/mudandstars/notifier/models"
 	"github.com/mudandstars/notifier/repository"
@@ -63,6 +64,18 @@ func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&requestBody); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	name := strings.Trim(requestBody.Name, " ")
+
+	if name == "" {
+		http.Error(w, "Name cannot be empty", http.StatusUnprocessableEntity)
+		return
+	}
+
+	if handler.repo.Exists(name) {
+		http.Error(w, "Entry with this name already exists", http.StatusNotAcceptable)
 		return
 	}
 
