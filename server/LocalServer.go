@@ -22,7 +22,7 @@ func RunLocalServer(ctx context.Context) error {
 
 	c := cors.AllowAll()
 
-    handler := c.Handler(http.DefaultServeMux)
+	handler := c.Handler(http.DefaultServeMux)
 
 	log.Printf("Running local server on port %s", os.Getenv("PORT"))
 	return http.ListenAndServe(address, handler)
@@ -58,15 +58,21 @@ func configRouter(w http.ResponseWriter, r *http.Request) {
 		*repository.NewConfigRepository(database.FileConnection()),
 	)
 
+	if r.Method == http.MethodPut {
+		log.Fatal("gccc")
+		configHandler.Update(w, r)
+		return
+	}
+
 	if r.Method == http.MethodPost {
 		configHandler.Store(w, r)
 		return
 	}
 
-	// if r.Method == http.MethodGet {
-	// 	configHandler.Index(w, r)
-	// 	return
-	// }
+	if r.Method == http.MethodGet {
+		configHandler.Show(w, r)
+		return
+	}
 
 	// if r.Method == http.MethodDelete {
 	// 	configHandler.Delete(w, r)

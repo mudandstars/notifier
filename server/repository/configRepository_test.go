@@ -16,7 +16,18 @@ func TestUserConfigRepository(t *testing.T) {
 	t.Run("correctly stores the userConfig", func(t *testing.T) {
 		userConfig := models.Config{NgrokAuthToken: "asojf012n12", NgrokPublicUrl: "asdf.asdf.free-app.com"}
 
-		error := userConfigRepo.Store(&userConfig)
+		error := userConfigRepo.Upsert(&userConfig)
+		if error != nil {
+			t.Fatal(error)
+		}
+	})
+
+	t.Run("correctly updates the userConfig", func(t *testing.T) {
+		userConfig := models.Config{NgrokAuthToken: "asojf012n12", NgrokPublicUrl: "asdf.asdf.free-app.com"}
+		userConfigRepo.Upsert(&userConfig)
+		userConfig = models.Config{NgrokAuthToken: "asojf012n12312", NgrokPublicUrl: "asdf.asd23f.free-app.com"}
+		error := userConfigRepo.Upsert(&userConfig)
+
 		if error != nil {
 			t.Fatal(error)
 		}
@@ -24,7 +35,7 @@ func TestUserConfigRepository(t *testing.T) {
 
 	t.Run("correctly fetches the user config", func(t *testing.T) {
 		userConfig := models.Config{NgrokAuthToken: "asojf012asdfn12", NgrokPublicUrl: "asdf.as123df.free-app.com"}
-		userConfigRepo.Store(&userConfig)
+		userConfigRepo.Upsert(&userConfig)
 
 		if _, error := userConfigRepo.Get(); error != nil {
 			t.Fatal(error)
@@ -33,7 +44,7 @@ func TestUserConfigRepository(t *testing.T) {
 
 	t.Run("correctly deletes the userConfig", func(t *testing.T) {
 		userConfig := models.Config{NgrokAuthToken: "asojf012asdfn12", NgrokPublicUrl: "asdf.as123df.free-app.com"}
-		userConfigRepo.Store(&userConfig)
+		userConfigRepo.Upsert(&userConfig)
 
 		error := userConfigRepo.Delete()
 		if error != nil {

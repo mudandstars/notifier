@@ -13,7 +13,7 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-func TestStoreUserConfig(t *testing.T) {
+func TestStoreConfig(t *testing.T) {
 	db := database.MemoryConnection()
 	db.AutoMigrate(&models.Config{})
 
@@ -27,7 +27,7 @@ func TestStoreUserConfig(t *testing.T) {
 			NgrokAuthToken: "somasd123j910",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
-		rr := storeUserConfigRequest(t, userConfigHandler, requestBody)
+		rr := storeConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusOK {
 			t.Errorf("Expected status %v, but got %v", http.StatusOK, status)
@@ -46,7 +46,7 @@ func TestStoreUserConfig(t *testing.T) {
 			NgrokAuthToken: "",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
-		rr := storeUserConfigRequest(t, userConfigHandler, requestBody)
+		rr := storeConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusUnprocessableEntity {
 			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
@@ -57,7 +57,7 @@ func TestStoreUserConfig(t *testing.T) {
 			NgrokAuthToken: "123pjk12o31",
 			NgrokPublicUrl: "",
 		}
-		rr = storeUserConfigRequest(t, userConfigHandler, requestBody)
+		rr = storeConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusUnprocessableEntity {
 			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
@@ -74,7 +74,7 @@ func TestStoreUserConfig(t *testing.T) {
 			NgrokPublicUrl: publicUrl,
 		}
 
-		rr := storeUserConfigRequest(t, userConfigHandler, requestBody)
+		rr := storeConfigRequest(t, userConfigHandler, requestBody)
 
 		userConfig, _ := userConfigHandler.repo.Get()
 
@@ -93,8 +93,8 @@ func TestStoreUserConfig(t *testing.T) {
 			NgrokAuthToken: "asfj120-j19asdf",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
-		storeUserConfigRequest(t, userConfigHandler, requestBody)
-		rr := storeUserConfigRequest(t, userConfigHandler, requestBody)
+		storeConfigRequest(t, userConfigHandler, requestBody)
+		rr := storeConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusNotAcceptable {
 			t.Errorf("Expected status %v, but got %v", http.StatusNotAcceptable, status)
@@ -104,10 +104,10 @@ func TestStoreUserConfig(t *testing.T) {
 	})
 }
 
-func storeUserConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestBody models.Config) *httptest.ResponseRecorder {
+func storeConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestBody models.Config) *httptest.ResponseRecorder {
 	body, _ := json.Marshal(requestBody)
 
-	req, err := http.NewRequest("POST", "/user-configs", bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", "/config", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatal(err)
 	}

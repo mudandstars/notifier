@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notifier/API/config_api_service.dart';
-import 'package:notifier/API/webhook_api_service.dart';
 import 'package:notifier/Components/standard_button.dart';
 import 'package:notifier/State/global_state.dart';
 import 'package:notifier/type/config.dart';
@@ -13,6 +12,9 @@ class UpsertConfigForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<GlobalState>();
+
+    authTokenController.text = appState.config?.ngrokAuthToken ?? "";
+    publicUrlController.text = appState.config?.ngrokPublicUrl ?? "";
 
     return SizedBox(
         child: Column(
@@ -60,6 +62,12 @@ class UpsertConfigForm extends StatelessWidget {
           },
           text: 'Save',
         ),
+        StandardButton(
+          onPressed: () async {
+            appState.initState();
+          },
+          text: 'test get',
+        )
       ],
     ));
   }

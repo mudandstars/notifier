@@ -5,28 +5,41 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserConfigRepository struct {
+type ConfigRepository struct {
 	db *gorm.DB
 }
 
-func NewConfigRepository(db *gorm.DB) *UserConfigRepository {
-	return &UserConfigRepository{
+func NewConfigRepository(db *gorm.DB) *ConfigRepository {
+	return &ConfigRepository{
 		db: db,
 	}
 }
 
-func (controller *UserConfigRepository) Store(body *models.Config) error {
-	if err := controller.db.Create(&body).Error; err != nil {
+func (repo *ConfigRepository) Upsert(body *models.Config) error {
+	var existingConfigs []models.Config
+	if err := repo.db.Find(&existingConfigs).Error; err != nil {
 		return err
+	}
+
+	if len(existingConfigs) > 0 {
+		// If records exist, update the first one
+		if err := repo.db.Model(&existingConfigs[0]).Updates(body).Error; err != nil {
+			return err
+		}
+	} else {
+		// If no records exist, create a new one
+		if err := repo.db.Create(body).Error; err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (controller *UserConfigRepository) Get() (models.Config, error) {
+func (repo *ConfigRepository) Get() (models.Config, error) {
 	var config []models.Config
 
-	results := controller.db.Find(&config)
+	results := repo.db.Find(&config)
 
 	if results.Error != nil {
 		return models.Config{}, results.Error
@@ -38,8 +51,8 @@ func (controller *UserConfigRepository) Get() (models.Config, error) {
 	return models.Config{}, nil
 }
 
-func (controller *UserConfigRepository) Delete() error {
-	if err := controller.db.Delete(&models.Config{}, "0 = 0").Error; err != nil {
+func (repo *ConfigRepository) Delete() error {
+	if err := repo.db.Delete(&models.Config{}, "0 = 0").Error; err != nil {
 		return err
 	}
 
