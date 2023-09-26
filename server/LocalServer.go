@@ -16,6 +16,7 @@ import (
 func RunLocalServer(ctx context.Context) error {
 	http.HandleFunc("/webhooks", projectsRouter)
 	http.HandleFunc("/webhooks/", projectsRouter)
+	http.HandleFunc("/config", configRouter)
 
 	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
@@ -46,6 +47,31 @@ func projectsRouter(w http.ResponseWriter, r *http.Request) {
 		webhookHandler.Delete(w, r)
 		return
 	}
+
+	if r.Method != http.MethodGet && r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func configRouter(w http.ResponseWriter, r *http.Request) {
+	configHandler := handler.NewConfigHandler(
+		*repository.NewConfigRepository(database.FileConnection()),
+	)
+
+	if r.Method == http.MethodPost {
+		configHandler.Store(w, r)
+		return
+	}
+
+	// if r.Method == http.MethodGet {
+	// 	configHandler.Index(w, r)
+	// 	return
+	// }
+
+	// if r.Method == http.MethodDelete {
+	// 	configHandler.Delete(w, r)
+	// 	return
+	// }
 
 	if r.Method != http.MethodGet && r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)

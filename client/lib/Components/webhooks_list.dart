@@ -65,7 +65,7 @@ class WebhooksList extends StatelessWidget {
                                   onPressed: () async {
                                     int id = webhooks![index].id;
                                     bool isDeleted =
-                                        await WebhookApiService().deleteWebhook(id);
+                                        await WebhookApiService().delete(id);
 
                                     if (isDeleted) {
                                       appState.initState();

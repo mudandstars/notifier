@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:notifier/API/config_api_service.dart';
 import 'package:notifier/API/webhook_api_service.dart';
 import 'package:notifier/Components/standard_button.dart';
 import 'package:notifier/State/global_state.dart';
+import 'package:notifier/type/config.dart';
 import 'package:provider/provider.dart';
 
 class UpsertConfigForm extends StatelessWidget {
@@ -45,6 +47,11 @@ class UpsertConfigForm extends StatelessWidget {
         ]),
         StandardButton(
           onPressed: () async {
+            bool isStored = await ConfigApiService().store(Config(
+                ngrokAuthToken: authTokenController.text,
+                ngrokPublicUrl: publicUrlController.text));
+
+            print(isStored);
             // bool isStored = await ApiService().storeWebhook(authTokenController.text, publicUrlController.text);
 
             // if (isStored) {

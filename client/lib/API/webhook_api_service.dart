@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:notifier/type/webhook.dart';
 
 class WebhookApiService {
-  Future<List<Webhook>?> getWebhooks() async {
+  Future<List<Webhook>?> get() async {
     var url = Uri.parse("http://127.0.0.1:6000/webhooks");
     var response = await http.get(url);
 
@@ -20,7 +20,7 @@ class WebhookApiService {
     return null;
   }
 
-  Future<bool> storeWebhook(String name) async {
+  Future<bool> store(String name) async {
     var url = Uri.parse("http://127.0.0.1:6000/webhooks");
     final headers = {
       'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ class WebhookApiService {
     return false;
   }
 
-  Future<bool> deleteWebhook(int id) async {
+  Future<bool> delete(int id) async {
     var url = Uri.parse("http://127.0.0.1:6000/webhooks/$id");
     var response = await http.delete(url);
 

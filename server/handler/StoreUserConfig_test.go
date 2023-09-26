@@ -15,15 +15,15 @@ import (
 
 func TestStoreUserConfig(t *testing.T) {
 	db := database.MemoryConnection()
-	db.AutoMigrate(&models.UserConfig{})
+	db.AutoMigrate(&models.Config{})
 
-	userConfigRepo := repository.NewUserConfigRepository(db)
-	userConfigHandler := NewUserConfigHandler(*userConfigRepo)
+	userConfigRepo := repository.NewConfigRepository(db)
+	userConfigHandler := NewConfigHandler(*userConfigRepo)
 
 	t.Run("correctly stores the record", func(t *testing.T) {
 		userConfigRepo.Delete()
-	
-		requestBody := models.UserConfig{
+
+		requestBody := models.Config{
 			NgrokAuthToken: "somasd123j910",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
@@ -42,7 +42,7 @@ func TestStoreUserConfig(t *testing.T) {
 
 	t.Run("values cannot be empty strings", func(t *testing.T) {
 		userConfigRepo.Delete()
-		requestBody := models.UserConfig{
+		requestBody := models.Config{
 			NgrokAuthToken: "",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
@@ -53,7 +53,7 @@ func TestStoreUserConfig(t *testing.T) {
 		}
 
 		userConfigRepo.Delete()
-		requestBody = models.UserConfig{
+		requestBody = models.Config{
 			NgrokAuthToken: "123pjk12o31",
 			NgrokPublicUrl: "",
 		}
@@ -69,7 +69,7 @@ func TestStoreUserConfig(t *testing.T) {
 
 		authToken := " somasd1a23j910 "
 		publicUrl := "   12asdf12.free-app.com  "
-		requestBody := models.UserConfig{
+		requestBody := models.Config{
 			NgrokAuthToken: authToken,
 			NgrokPublicUrl: publicUrl,
 		}
@@ -89,7 +89,7 @@ func TestStoreUserConfig(t *testing.T) {
 
 	t.Run("cannot store a second config", func(t *testing.T) {
 		userConfigRepo.Delete()
-		requestBody := models.UserConfig{
+		requestBody := models.Config{
 			NgrokAuthToken: "asfj120-j19asdf",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
@@ -104,7 +104,7 @@ func TestStoreUserConfig(t *testing.T) {
 	})
 }
 
-func storeUserConfigRequest(t *testing.T, userConfigHandler UserConfigHandler, requestBody models.UserConfig) *httptest.ResponseRecorder {
+func storeUserConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestBody models.Config) *httptest.ResponseRecorder {
 	body, _ := json.Marshal(requestBody)
 
 	req, err := http.NewRequest("POST", "/user-configs", bytes.NewBuffer(body))

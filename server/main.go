@@ -13,6 +13,7 @@ func main() {
 	utils.LoadEnvironment()
 
 	database.FileConnection().AutoMigrate(&models.Webhook{})
+	database.FileConnection().AutoMigrate(&models.Config{})
 
 	go func() {
 		log.Fatal(RunLocalServer(context.Background()))

@@ -9,13 +9,13 @@ type UserConfigRepository struct {
 	db *gorm.DB
 }
 
-func NewUserConfigRepository(db *gorm.DB) *UserConfigRepository {
+func NewConfigRepository(db *gorm.DB) *UserConfigRepository {
 	return &UserConfigRepository{
 		db: db,
 	}
 }
 
-func (controller *UserConfigRepository) Store(body *models.UserConfig) error {
+func (controller *UserConfigRepository) Store(body *models.Config) error {
 	if err := controller.db.Create(&body).Error; err != nil {
 		return err
 	}
@@ -23,23 +23,23 @@ func (controller *UserConfigRepository) Store(body *models.UserConfig) error {
 	return nil
 }
 
-func (controller *UserConfigRepository) Get() (models.UserConfig, error) {
-	var config []models.UserConfig
+func (controller *UserConfigRepository) Get() (models.Config, error) {
+	var config []models.Config
 
 	results := controller.db.Find(&config)
 
 	if results.Error != nil {
-		return models.UserConfig{}, results.Error
+		return models.Config{}, results.Error
 	}
 
 	if len(config) > 0 {
 		return config[0], nil
 	}
-	return models.UserConfig{}, nil
+	return models.Config{}, nil
 }
 
 func (controller *UserConfigRepository) Delete() error {
-	if err := controller.db.Delete(&models.UserConfig{}, "0 = 0").Error; err != nil {
+	if err := controller.db.Delete(&models.Config{}, "0 = 0").Error; err != nil {
 		return err
 	}
 

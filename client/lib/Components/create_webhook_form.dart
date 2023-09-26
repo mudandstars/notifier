@@ -34,7 +34,7 @@ class CreateWebhookForm extends StatelessWidget {
           StandardButton(
             onPressed: () async {
               String name = textEditingController.text;
-              bool isStored = await WebhookApiService().storeWebhook(name);
+              bool isStored = await WebhookApiService().store(name);
 
               if (isStored) {
                 appState.initState();

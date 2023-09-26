@@ -9,17 +9,17 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-type UserConfigHandler struct {
+type ConfigHandler struct {
 	repo repository.UserConfigRepository
 }
 
-func NewUserConfigHandler(repo repository.UserConfigRepository) UserConfigHandler {
-	return UserConfigHandler{
+func NewConfigHandler(repo repository.UserConfigRepository) ConfigHandler {
+	return ConfigHandler{
 		repo: repo,
 	}
 }
 
-func (handler *UserConfigHandler) Store(w http.ResponseWriter, r *http.Request) {
+func (handler *ConfigHandler) Store(w http.ResponseWriter, r *http.Request) {
 	var requestBody struct {
 		NgrokAuthToken string `json:"ngrokAuthToken"`
 		NgrokPublicUrl string `json:"ngrokPublicUrl"`
@@ -31,9 +31,13 @@ func (handler *UserConfigHandler) Store(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	userConfig, _ := handler.repo.Get()
+	userConfig, err := handler.repo.Get()
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
-	if userConfig != (models.UserConfig{}) {
+	if userConfig != (models.Config{}) {
 		http.Error(w, "Cannot store a second user config", http.StatusNotAcceptable)
 		return
 	}
@@ -43,7 +47,7 @@ func (handler *UserConfigHandler) Store(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	handler.repo.Store(&models.UserConfig{
+	handler.repo.Store(&models.Config{
 		NgrokAuthToken: strings.Trim(requestBody.NgrokAuthToken, " "),
 		NgrokPublicUrl: strings.Trim(requestBody.NgrokPublicUrl, " "),
 	})
