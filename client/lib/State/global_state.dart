@@ -1,5 +1,5 @@
 import 'package:notifier/type/webhook.dart';
-import '../API/api_service.dart';
+import '../API/webhook_api_service.dart';
 import 'package:flutter/material.dart';
 
 class GlobalState extends ChangeNotifier {
@@ -7,7 +7,7 @@ class GlobalState extends ChangeNotifier {
   bool queriedWebhooks = false;
 
   void initState() async {
-    webhooks = await ApiService().getWebhooks();
+    webhooks = await WebhookApiService().getWebhooks();
     queriedWebhooks = true;
 
     notifyListeners();

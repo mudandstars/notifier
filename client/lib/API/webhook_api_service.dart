@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:notifier/type/webhook.dart';
 
-class ApiService {
+class WebhookApiService {
   Future<List<Webhook>?> getWebhooks() async {
     var url = Uri.parse("http://127.0.0.1:6000/webhooks");
     var response = await http.get(url);

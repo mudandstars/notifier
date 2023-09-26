@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notifier/API/api_service.dart';
+import 'package:notifier/API/webhook_api_service.dart';
 import 'package:notifier/Components/standard_button.dart';
 import 'package:notifier/State/global_state.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +34,7 @@ class CreateWebhookForm extends StatelessWidget {
           StandardButton(
             onPressed: () async {
               String name = textEditingController.text;
-              bool isStored = await ApiService().storeWebhook(name);
+              bool isStored = await WebhookApiService().storeWebhook(name);
 
               if (isStored) {
                 appState.initState();
