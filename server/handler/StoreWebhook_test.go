@@ -12,7 +12,7 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-func TestStoreWebhookHandler(t *testing.T) {
+func TestStoreWebhook(t *testing.T) {
 	db := database.MemoryConnection()
 	db.AutoMigrate(&models.Webhook{})
 
@@ -21,7 +21,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 
 	t.Run("correctly stores the record", func(t *testing.T) {
 		name := "new webhook name"
-		rr := makeStoreRequest(t, webhookHandler, name)
+		rr := storeWebhookRequest(t, webhookHandler, name)
 
 		if status := rr.Code; status != http.StatusOK {
 			t.Errorf("Expected status %v, but got %v", http.StatusOK, status)
@@ -36,7 +36,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 	})
 
 	t.Run("name cannot be empty string", func(t *testing.T) {
-		rr := makeStoreRequest(t, webhookHandler, " ")
+		rr := storeWebhookRequest(t, webhookHandler, " ")
 
 		if status := rr.Code; status != http.StatusUnprocessableEntity {
 			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
@@ -45,7 +45,7 @@ func TestStoreWebhookHandler(t *testing.T) {
 
 	t.Run("name gets trimmed", func(t *testing.T) {
 		name := "  test "
-		makeStoreRequest(t, webhookHandler, name)
+		storeWebhookRequest(t, webhookHandler, name)
 
 		var webhook models.Webhook
 		db.Where("name = ?", name).First(&webhook)
@@ -57,8 +57,8 @@ func TestStoreWebhookHandler(t *testing.T) {
 
 	t.Run("cannot store duplicate names", func(t *testing.T) {
 		name := "test name"
-		makeStoreRequest(t, webhookHandler, name)
-		rr := makeStoreRequest(t, webhookHandler, name)
+		storeWebhookRequest(t, webhookHandler, name)
+		rr := storeWebhookRequest(t, webhookHandler, name)
 
 		if status := rr.Code; status != http.StatusNotAcceptable {
 			t.Errorf("Expected status %v, but got %v", http.StatusNotAcceptable, status)
@@ -66,22 +66,22 @@ func TestStoreWebhookHandler(t *testing.T) {
 	})
 }
 
-func makeStoreRequest(t *testing.T, webhookHandler WebhookHandler, name string) *httptest.ResponseRecorder {
-		requestBody := models.Webhook{
-			Name: name,
-		}
+func storeWebhookRequest(t *testing.T, webhookHandler WebhookHandler, name string) *httptest.ResponseRecorder {
+	requestBody := models.Webhook{
+		Name: name,
+	}
 
-		body, _ := json.Marshal(requestBody)
+	body, _ := json.Marshal(requestBody)
 
-		req, err := http.NewRequest("POST", "/webhooks", bytes.NewBuffer(body))
-		if err != nil {
-			t.Fatal(err)
-		}
-		req.Header.Set("Content-Type", "application/json")
-		rr := httptest.NewRecorder()
-		handler := http.HandlerFunc(webhookHandler.Store)
+	req, err := http.NewRequest("POST", "/webhooks", bytes.NewBuffer(body))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(webhookHandler.Store)
 
-		handler.ServeHTTP(rr, req)
+	handler.ServeHTTP(rr, req)
 
-		return rr
+	return rr
 }

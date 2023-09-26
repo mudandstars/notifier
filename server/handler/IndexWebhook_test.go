@@ -11,7 +11,7 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-func TestIndexWebhookHandler(t *testing.T) {
+func TestIndexWebhook(t *testing.T) {
 	db := database.MemoryConnection()
 	db.AutoMigrate(&models.Webhook{})
 

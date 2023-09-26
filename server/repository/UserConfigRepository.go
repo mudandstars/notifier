@@ -29,10 +29,13 @@ func (controller *UserConfigRepository) Get() (models.UserConfig, error) {
 	results := controller.db.Find(&config)
 
 	if results.Error != nil {
-		return config[0], results.Error
+		return models.UserConfig{}, results.Error
 	}
 
-	return config[0], nil
+	if len(config) > 0 {
+		return config[0], nil
+	}
+	return models.UserConfig{}, nil
 }
 
 func (controller *UserConfigRepository) Delete() error {

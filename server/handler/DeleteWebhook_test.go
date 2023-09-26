@@ -11,7 +11,7 @@ import (
 	"github.com/mudandstars/notifier/repository"
 )
 
-func TestDeleteWebhookHandler(t *testing.T) {
+func TestDeleteWebhook(t *testing.T) {
 	db := database.MemoryConnection()
 	db.AutoMigrate(&models.Webhook{})
 
