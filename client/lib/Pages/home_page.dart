@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notifier/Components/webhooks_list.dart';
-import 'package:notifier/Components/create_webhook_form.dart';
+import 'package:notifier/Pages/config.dart';
+import 'package:notifier/Pages/webhooks.dart';
 import 'package:provider/provider.dart';
 import '../State/global_state.dart';
 
@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
       length: 2,
       initialIndex: _selectedTabIndex,
       child: Scaffold(
-        key: Key(appState.webhooks?.length.toString() ?? "0"),
         appBar: AppBar(
           toolbarHeight: 3,
           bottom: TabBar(
@@ -42,19 +41,10 @@ class _HomePageState extends State<HomePage> {
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 15),
-                  child: CreateWebhookForm(),
-                ),
-                SizedBox(height: 50),
-                WebhooksList(webhooks: appState.webhooks),
-              ],
+            Webhooks(
+              webhooks: appState.webhooks,
             ),
-            Center(
-              child: Text('Page 2 Content'),
-            ),
+            Config(),
           ],
         ),
       ),
