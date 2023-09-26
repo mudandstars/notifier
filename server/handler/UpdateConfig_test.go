@@ -105,7 +105,7 @@ func updateConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestB
 
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(userConfigHandler.Update)
+	handler := http.HandlerFunc(userConfigHandler.Upsert)
 
 	handler.ServeHTTP(rr, req)
 

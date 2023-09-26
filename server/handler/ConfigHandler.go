@@ -24,41 +24,10 @@ func NewConfigHandler(repo repository.ConfigRepository) ConfigHandler {
 type configBody struct {
 	NgrokAuthToken string `json:"ngrokAuthToken"`
 	NgrokPublicUrl string `json:"ngrokPublicUrl"`
-	ID             uint    `json:"id"`
+	ID             uint   `json:"id"`
 }
 
-func (handler *ConfigHandler) Store(w http.ResponseWriter, r *http.Request) {
-	var requestBody configBody
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&requestBody); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	config, err := handler.repo.Get()
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	if config != (models.Config{}) {
-		http.Error(w, "Cannot store a second user config", http.StatusNotAcceptable)
-		return
-	}
-
-	if strings.Trim(requestBody.NgrokAuthToken, " ") == "" || strings.Trim(requestBody.NgrokPublicUrl, " ") == "" {
-		http.Error(w, "Entries cannot be empty", http.StatusUnprocessableEntity)
-		return
-	}
-
-	handler.repo.Upsert(&models.Config{
-		NgrokAuthToken: strings.Trim(requestBody.NgrokAuthToken, " "),
-		NgrokPublicUrl: strings.Trim(requestBody.NgrokPublicUrl, " "),
-	})
-}
-
-func (handler *ConfigHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (handler *ConfigHandler) Upsert(w http.ResponseWriter, r *http.Request) {
 	var requestBody configBody
 
 	decoder := json.NewDecoder(r.Body)

@@ -20,14 +20,14 @@ func TestStoreConfig(t *testing.T) {
 	userConfigRepo := repository.NewConfigRepository(db)
 	userConfigHandler := NewConfigHandler(*userConfigRepo)
 
-	t.Run("correctly stores the record", func(t *testing.T) {
+	t.Run("correctly stores or updates the record", func(t *testing.T) {
 		userConfigRepo.Delete()
 
 		requestBody := models.Config{
 			NgrokAuthToken: "somasd123j910",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
-		rr := storeConfigRequest(t, userConfigHandler, requestBody)
+		rr := upsertConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusOK {
 			t.Errorf("Expected status %v, but got %v", http.StatusOK, status)
@@ -46,7 +46,7 @@ func TestStoreConfig(t *testing.T) {
 			NgrokAuthToken: "",
 			NgrokPublicUrl: "12asdf12.free-app.com",
 		}
-		rr := storeConfigRequest(t, userConfigHandler, requestBody)
+		rr := upsertConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusUnprocessableEntity {
 			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
@@ -57,7 +57,7 @@ func TestStoreConfig(t *testing.T) {
 			NgrokAuthToken: "123pjk12o31",
 			NgrokPublicUrl: "",
 		}
-		rr = storeConfigRequest(t, userConfigHandler, requestBody)
+		rr = upsertConfigRequest(t, userConfigHandler, requestBody)
 
 		if status := rr.Code; status != http.StatusUnprocessableEntity {
 			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
@@ -74,7 +74,7 @@ func TestStoreConfig(t *testing.T) {
 			NgrokPublicUrl: publicUrl,
 		}
 
-		rr := storeConfigRequest(t, userConfigHandler, requestBody)
+		rr := upsertConfigRequest(t, userConfigHandler, requestBody)
 
 		userConfig, _ := userConfigHandler.repo.Get()
 
@@ -86,35 +86,19 @@ func TestStoreConfig(t *testing.T) {
 			t.Fatal("Values were not trimmed properly")
 		}
 	})
-
-	t.Run("cannot store a second config", func(t *testing.T) {
-		userConfigRepo.Delete()
-		requestBody := models.Config{
-			NgrokAuthToken: "asfj120-j19asdf",
-			NgrokPublicUrl: "12asdf12.free-app.com",
-		}
-		storeConfigRequest(t, userConfigHandler, requestBody)
-		rr := storeConfigRequest(t, userConfigHandler, requestBody)
-
-		if status := rr.Code; status != http.StatusNotAcceptable {
-			t.Errorf("Expected status %v, but got %v", http.StatusNotAcceptable, status)
-		}
-
-		userConfigRepo.Delete()
-	})
 }
 
-func storeConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestBody models.Config) *httptest.ResponseRecorder {
+func upsertConfigRequest(t *testing.T, userConfigHandler ConfigHandler, requestBody models.Config) *httptest.ResponseRecorder {
 	body, _ := json.Marshal(requestBody)
 
-	req, err := http.NewRequest("POST", "/config", bytes.NewBuffer(body))
+	req, err := http.NewRequest("PUT", "/config", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(userConfigHandler.Store)
+	handler := http.HandlerFunc(userConfigHandler.Upsert)
 
 	handler.ServeHTTP(rr, req)
 

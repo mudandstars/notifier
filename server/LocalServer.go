@@ -59,13 +59,7 @@ func configRouter(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if r.Method == http.MethodPut {
-		log.Fatal("gccc")
-		configHandler.Update(w, r)
-		return
-	}
-
-	if r.Method == http.MethodPost {
-		configHandler.Store(w, r)
+		configHandler.Upsert(w, r)
 		return
 	}
 
@@ -73,11 +67,6 @@ func configRouter(w http.ResponseWriter, r *http.Request) {
 		configHandler.Show(w, r)
 		return
 	}
-
-	// if r.Method == http.MethodDelete {
-	// 	configHandler.Delete(w, r)
-	// 	return
-	// }
 
 	if r.Method != http.MethodGet && r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
