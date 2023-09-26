@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var appState = context.watch<GlobalState>();
 
-    if (!appState.queriedBackend) {
+    if (!appState.queriedWebhooks) {
       appState.initState();
     }
 
@@ -36,6 +36,10 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 _selectedTabIndex = index;
               });
+
+              if (index == 1) {
+                appState.getConfig();
+              }
             },
           ),
         ),

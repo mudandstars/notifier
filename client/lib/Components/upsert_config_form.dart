@@ -49,25 +49,14 @@ class UpsertConfigForm extends StatelessWidget {
         ]),
         StandardButton(
           onPressed: () async {
-            bool isStored = await ConfigApiService().store(Config(
+            bool isUpserted = await ConfigApiService().upsert(Config(
                 ngrokAuthToken: authTokenController.text,
                 ngrokPublicUrl: publicUrlController.text));
 
-            print(isStored);
-            // bool isStored = await ApiService().storeWebhook(authTokenController.text, publicUrlController.text);
-
-            // if (isStored) {
-            //   appState.initState();
-            // }
+            print(isUpserted);
           },
           text: 'Save',
         ),
-        StandardButton(
-          onPressed: () async {
-            appState.initState();
-          },
-          text: 'test get',
-        )
       ],
     ));
   }

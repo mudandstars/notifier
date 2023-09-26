@@ -18,7 +18,7 @@ class ConfigApiService {
     return null;
   }
 
-  Future<bool> store(Config config) async {
+  Future<bool> upsert(Config config) async {
     var url = Uri.parse("http://127.0.0.1:6000/config");
     final headers = {
       'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ class ConfigApiService {
     };
 
     var response =
-        await http.post(url, headers: headers, body: jsonEncode(requestBody));
+        await http.put(url, headers: headers, body: jsonEncode(requestBody));
 
     if (response.statusCode == 200) {
       return true;

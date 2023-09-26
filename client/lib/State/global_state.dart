@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 class GlobalState extends ChangeNotifier {
   List<Webhook>? webhooks;
   Config? config;
-  bool queriedBackend = false;
+  bool queriedWebhooks = false;
 
   void initState() async {
     webhooks = await WebhookApiService().get();
-    config = await ConfigApiService().get();
-
-    queriedBackend = true;
+    queriedWebhooks = true;
 
     notifyListeners();
+  }
+
+  void getConfig() async {
+    config = await ConfigApiService().get();
   }
 }
