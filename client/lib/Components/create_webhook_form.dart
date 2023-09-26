@@ -28,7 +28,7 @@ class CreateWebhookForm extends StatelessWidget {
             controller: textEditingController,
             decoration: InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: "Enter the project's name",
+              hintText: "Webhook Name..",
             ),
           )),
           StandardButton(

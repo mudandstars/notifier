@@ -25,7 +25,7 @@ class WebhooksList extends StatelessWidget {
                   itemCount: webhooks!.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
+                        padding: EdgeInsets.only(left: 15, right: 15),
                         child: Card(
                           child: ListTile(
                             title: Text(webhooks![index].name),
