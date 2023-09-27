@@ -3,6 +3,7 @@ import 'package:notifier/API/config_api_service.dart';
 import 'package:notifier/Components/standard_button.dart';
 import 'package:notifier/State/global_state.dart';
 import 'package:notifier/type/config.dart';
+import 'package:notifier/utils/notify.dart';
 import 'package:provider/provider.dart';
 
 class UpsertConfigForm extends StatelessWidget {
@@ -52,8 +53,14 @@ class UpsertConfigForm extends StatelessWidget {
             bool isUpserted = await ConfigApiService().upsert(Config(
                 ngrokAuthToken: authTokenController.text,
                 ngrokPublicUrl: publicUrlController.text));
-
-            print(isUpserted);
+            if (isUpserted) {
+              appState.initState();
+              appState.getConfig();
+              notify(context,
+                  "Saved config. Please restart app to spin up new tunnel.");
+            } else {
+              notify(context, "Failed to save config");
+            }
           },
           text: 'Save',
         ),

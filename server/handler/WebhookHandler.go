@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/mudandstars/notifier/models"
@@ -35,6 +34,16 @@ type indexWebhook struct {
 func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 	allWebhooks, error := handler.repo.All()
 
+	configRepo := repository.NewConfigRepository(handler.repo.DB)
+	config, err := configRepo.Get()
+
+	var tunnelUrl string
+	if config != (models.Config{}) && err == nil {
+		tunnelUrl = config.NgrokPublicUrl
+	} else {
+		tunnelUrl = ""
+	}
+
 	if error != nil {
 		log.Fatal(error)
 	}
@@ -44,7 +53,7 @@ func (handler *WebhookHandler) Index(w http.ResponseWriter, r *http.Request) {
 	for _, webhook := range allWebhooks {
 		webhooksBody = append(webhooksBody, indexWebhook{
 			Name: webhook.Name,
-			Url:  os.Getenv("NGROK_PUBLIC_URL") + "/notifier?name=" + webhook.Name,
+			Url:  tunnelUrl + "/notifier?name=" + webhook.Name,
 			Id:   webhook.ID,
 		})
 	}

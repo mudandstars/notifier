@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notifier/utils/notify.dart';
 import 'package:notifier/utils/store_to_clipboard.dart';
 import 'package:provider/provider.dart';
 import 'package:notifier/API/webhook_api_service.dart';
@@ -69,6 +70,10 @@ class WebhooksList extends StatelessWidget {
 
                                     if (isDeleted) {
                                       appState.initState();
+                                      notify(context, "Deleted webhook");
+                                    } else {
+                                      notify(
+                                          context, "Failed deleting webhook");
                                     }
                                   },
                                 )),

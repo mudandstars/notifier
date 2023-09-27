@@ -4,7 +4,7 @@ import 'package:notifier/type/config.dart';
 
 class ConfigApiService {
   Future<Config?> get() async {
-    var url = Uri.parse("http://127.0.0.1:6000/config");
+    var url = Uri.parse("http://127.0.0.1:61391/config");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -19,7 +19,7 @@ class ConfigApiService {
   }
 
   Future<bool> upsert(Config config) async {
-    var url = Uri.parse("http://127.0.0.1:6000/config");
+    var url = Uri.parse("http://127.0.0.1:61391/config");
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -39,7 +39,7 @@ class ConfigApiService {
   }
 
   Future<bool> delete(int id) async {
-    var url = Uri.parse("http://127.0.0.1:6000/config");
+    var url = Uri.parse("http://127.0.0.1:61391/config");
     var response = await http.delete(url);
 
     if (response.statusCode == 200) {

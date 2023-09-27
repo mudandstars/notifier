@@ -1,8 +1,7 @@
-package main
+package local_server
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -18,14 +17,12 @@ func RunLocalServer(ctx context.Context) error {
 	http.HandleFunc("/webhooks/", projectsRouter)
 	http.HandleFunc("/config", configRouter)
 
-	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
-
 	c := cors.AllowAll()
 
 	handler := c.Handler(http.DefaultServeMux)
 
 	log.Printf("Running local server on port %s", os.Getenv("PORT"))
-	return http.ListenAndServe(address, handler)
+	return http.ListenAndServe(":61391", handler)
 }
 
 func projectsRouter(w http.ResponseWriter, r *http.Request) {

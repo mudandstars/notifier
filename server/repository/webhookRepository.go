@@ -7,17 +7,17 @@ import (
 )
 
 type WebhookRepository struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 func NewWebhookRepository(db *gorm.DB) *WebhookRepository {
 	return &WebhookRepository{
-		db: db,
+		DB: db,
 	}
 }
 
 func (controller *WebhookRepository) Store(body *models.Webhook) error {
-	if err := controller.db.Create(&body).Error; err != nil {
+	if err := controller.DB.Create(&body).Error; err != nil {
 		return err
 	}
 
@@ -27,7 +27,7 @@ func (controller *WebhookRepository) Store(body *models.Webhook) error {
 func (controller *WebhookRepository) All() ([]models.Webhook, error) {
 	var users []models.Webhook
 
-	result := controller.db.Find(&users)
+	result := controller.DB.Find(&users)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -37,7 +37,7 @@ func (controller *WebhookRepository) All() ([]models.Webhook, error) {
 }
 
 func (controller *WebhookRepository) Delete(id uint) error {
-	if err := controller.db.Delete(&models.Webhook{}, id).Error; err != nil {
+	if err := controller.DB.Delete(&models.Webhook{}, id).Error; err != nil {
 		return err
 	}
 
@@ -47,7 +47,7 @@ func (controller *WebhookRepository) Delete(id uint) error {
 func (controller *WebhookRepository) Exists(name string) bool {
 	count := int64(0)
 
-	controller.db.Model(&models.Webhook{}).
+	controller.DB.Model(&models.Webhook{}).
 		Where("name = ?", name).
 		Count(&count)
 

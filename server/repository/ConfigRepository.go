@@ -6,29 +6,29 @@ import (
 )
 
 type ConfigRepository struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 func NewConfigRepository(db *gorm.DB) *ConfigRepository {
 	return &ConfigRepository{
-		db: db,
+		DB: db,
 	}
 }
 
 func (repo *ConfigRepository) Upsert(body *models.Config) error {
 	var existingConfigs []models.Config
-	if err := repo.db.Find(&existingConfigs).Error; err != nil {
+	if err := repo.DB.Find(&existingConfigs).Error; err != nil {
 		return err
 	}
 
 	if len(existingConfigs) > 0 {
 		// If records exist, update the first one
-		if err := repo.db.Model(&existingConfigs[0]).Updates(body).Error; err != nil {
+		if err := repo.DB.Model(&existingConfigs[0]).Updates(body).Error; err != nil {
 			return err
 		}
 	} else {
 		// If no records exist, create a new one
-		if err := repo.db.Create(body).Error; err != nil {
+		if err := repo.DB.Create(body).Error; err != nil {
 			return err
 		}
 	}
@@ -39,7 +39,7 @@ func (repo *ConfigRepository) Upsert(body *models.Config) error {
 func (repo *ConfigRepository) Get() (models.Config, error) {
 	var config []models.Config
 
-	results := repo.db.Find(&config)
+	results := repo.DB.Find(&config)
 
 	if results.Error != nil {
 		return models.Config{}, results.Error
@@ -52,7 +52,7 @@ func (repo *ConfigRepository) Get() (models.Config, error) {
 }
 
 func (repo *ConfigRepository) Delete() error {
-	if err := repo.db.Delete(&models.Config{}, "0 = 0").Error; err != nil {
+	if err := repo.DB.Delete(&models.Config{}, "0 = 0").Error; err != nil {
 		return err
 	}
 
