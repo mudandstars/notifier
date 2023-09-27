@@ -57,7 +57,7 @@ class UpsertConfigForm extends StatelessWidget {
               appState.initState();
               appState.getConfig();
               notify(context,
-                  "Saved config. Please restart app to spin up new tunnel.");
+                  "Saved config. It will spin up the new tunnel within 5 seconds. If it does not work, restart the backend.");
             } else {
               notify(context, "Failed to save config");
             }

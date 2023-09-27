@@ -18,8 +18,10 @@ import (
 )
 
 var server *http.Server
+var db *gorm.DB
 
-func RunNgrokServer(db *gorm.DB) {
+func RunNgrokServer(newDB *gorm.DB) {
+	db = newDB
 	configRepo := repository.NewConfigRepository(db)
 	config, error := configRepo.Get()
 
@@ -118,5 +120,10 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	projectName := r.URL.Query()["name"][0]
-	utils.Notify("Project "+projectName, "Triggered URL")
+
+	webhookRepo := repository.NewWebhookRepository(db)
+
+	if webhookRepo.Exists(projectName) {
+		utils.Notify("Project "+projectName, "Triggered URL")
+	}
 }
