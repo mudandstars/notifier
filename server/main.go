@@ -15,7 +15,7 @@ func main() {
 	db.AutoMigrate(&models.Webhook{})
 	db.AutoMigrate(&models.Config{})
 
-	go func () {
+	go func() {
 		ngrok_server.RunNgrokServer(db)
 	}()
 
