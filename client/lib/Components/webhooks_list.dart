@@ -16,7 +16,7 @@ class WebhooksList extends StatelessWidget {
     var appState = context.watch<GlobalState>();
 
     return webhooks == null
-        ? Text("There are no webhooks yet...")
+        ? Text("There are no webhooks yet.\n\nPlease create one first.")
         : webhooks!.isEmpty
             ? Center(
                 child: CircularProgressIndicator(),

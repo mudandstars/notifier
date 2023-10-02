@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notifier/colors.dart';
 import 'package:provider/provider.dart';
 import 'State/global_state.dart';
 import 'Pages/home_page.dart';
@@ -18,7 +19,9 @@ class NotifierApp extends StatelessWidget {
         title: 'Notifier',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blueGrey,
+              background: backgroundGray),
         ),
         home: HomePage(),
       ),
