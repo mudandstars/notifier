@@ -83,6 +83,11 @@ func (handler *WebhookHandler) Store(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if strings.Contains(name, " ") {
+		http.Error(w, "Name must'n contain spaces.", http.StatusUnprocessableEntity)
+		return
+	}
+
 	if handler.repo.Exists(name) {
 		http.Error(w, "Entry with this name already exists", http.StatusNotAcceptable)
 		return

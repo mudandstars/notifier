@@ -20,7 +20,7 @@ func TestStoreWebhook(t *testing.T) {
 	webhookHandler := NewWebhookHandler(*webhookRepo)
 
 	t.Run("correctly stores the record", func(t *testing.T) {
-		name := "new webhook name"
+		name := "new-webhook-name"
 		rr := storeWebhookRequest(t, webhookHandler, name)
 
 		if status := rr.Code; status != http.StatusOK {
@@ -43,6 +43,14 @@ func TestStoreWebhook(t *testing.T) {
 		}
 	})
 
+	t.Run("name cannot contain white spaces in between", func(t *testing.T) {
+		rr := storeWebhookRequest(t, webhookHandler, " test project ")
+
+		if status := rr.Code; status != http.StatusUnprocessableEntity {
+			t.Errorf("Expected status %v, but got %v", http.StatusUnprocessableEntity, status)
+		}
+	})
+
 	t.Run("name gets trimmed", func(t *testing.T) {
 		name := "  test "
 		storeWebhookRequest(t, webhookHandler, name)
@@ -56,7 +64,7 @@ func TestStoreWebhook(t *testing.T) {
 	})
 
 	t.Run("cannot store duplicate names", func(t *testing.T) {
-		name := "test name"
+		name := "test-name"
 		storeWebhookRequest(t, webhookHandler, name)
 		rr := storeWebhookRequest(t, webhookHandler, name)
 
