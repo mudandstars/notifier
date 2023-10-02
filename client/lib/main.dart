@@ -4,11 +4,11 @@ import 'State/global_state.dart';
 import 'Pages/home_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(NotifierApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NotifierApp extends StatelessWidget {
+  const NotifierApp({super.key});
 
   @override
   Widget build(BuildContext context) {
